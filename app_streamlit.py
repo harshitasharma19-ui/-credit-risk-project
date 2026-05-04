@@ -7,7 +7,7 @@ from streamlit_option_menu import option_menu
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(page_title="CreditGuard ML", layout="wide")
 
-# ---------------- LOADING SCREEN ----------------
+# ---------------- LOADING ----------------
 with st.spinner("Loading CreditGuard ML..."):
     time.sleep(1)
 
@@ -52,8 +52,8 @@ model = pickle.load(open("model.pkl", "rb"))
 # ---------------- NAVBAR ----------------
 selected = option_menu(
     menu_title=None,
-    options=["Overview", "EDA", "Models", "Results", "Live Demo"],
-    icons=["house", "bar-chart", "cpu", "trophy", "play"],
+    options=["Overview", "EDA", "Models", "Results", "Report", "Live Demo"],
+    icons=["house", "bar-chart", "cpu", "trophy", "file-text", "play"],
     orientation="horizontal"
 )
 
@@ -72,7 +72,6 @@ if selected == "Overview":
     col4.markdown("<div class='card'><h2>92.0%</h2><p>F1 Score</p></div>", unsafe_allow_html=True)
 
     st.divider()
-
     st.info("✔ Best Model: LightGBM | ✔ AUC Score: 0.97 | ✔ Fast Prediction")
 
 # ================= EDA =================
@@ -82,7 +81,8 @@ elif selected == "EDA":
     labels = ["Good Risk", "Bad Risk"]
     values = [2278, 1522]
 
-    fig = px.pie(values=values, names=labels, title="Risk Distribution",
+    fig = px.pie(values=values, names=labels,
+                 title="Risk Distribution",
                  color_discrete_sequence=["green", "red"])
     st.plotly_chart(fig, use_container_width=True)
 
@@ -93,7 +93,8 @@ elif selected == "Models":
     models = ["RandomForest", "XGBoost", "LightGBM"]
     acc = [85, 91, 92]
 
-    fig = px.bar(x=models, y=acc, color=acc, title="Model Accuracy")
+    fig = px.bar(x=models, y=acc, color=acc,
+                 title="Model Accuracy")
     st.plotly_chart(fig, use_container_width=True)
 
 # ================= RESULTS =================
@@ -102,8 +103,75 @@ elif selected == "Results":
 
     st.image("confusion_matrix.png", caption="Confusion Matrix")
 
-    st.metric("Accuracy", "92.6%")
-    st.metric("F1 Score", "92.0%")
+    col1, col2 = st.columns(2)
+    col1.metric("Accuracy", "92.6%")
+    col2.metric("F1 Score", "92.0%")
+
+# ================= REPORT =================
+elif selected == "Report":
+
+    st.markdown("""
+    <div style="padding:25px; border-radius:20px;
+                background: rgba(255,255,255,0.08);
+                backdrop-filter: blur(12px);
+                box-shadow: 0px 0px 20px rgba(0,0,0,0.3);">
+    """, unsafe_allow_html=True)
+
+    st.markdown("<h2 style='color:#FFD700;'>📄 Project Report</h2>", unsafe_allow_html=True)
+
+    st.markdown("""
+    ### 📌 Abstract
+    This project builds a **Credit Risk Prediction System** using machine learning.  
+    It classifies users into **Good Risk** and **Bad Risk** categories.  
+    Achieved **92.6% accuracy using LightGBM**.
+    """)
+
+    st.markdown("""
+    ### 🧠 1. Introduction
+    Credit risk prediction helps banks reduce loan defaults.  
+    Traditional systems are rule-based, but ML captures hidden patterns.  
+    We used **ensemble learning techniques**.
+    """)
+
+    st.markdown("""
+    ### 📊 2. Dataset
+    - Total Records: **3,800**
+    - Features: 15  
+    - Good Risk: 60%  
+    - Bad Risk: 40%
+    """)
+
+    st.markdown("""
+    ### ⚙️ 3. Methodology
+    - Data Cleaning  
+    - Feature Selection  
+    - Model Training  
+    - Evaluation using Confusion Matrix  
+    """)
+
+    st.markdown("""
+    ### 🤖 4. Models Used
+    - Random Forest  
+    - XGBoost  
+    - LightGBM (Best Model)  
+    """)
+
+    st.markdown("""
+    ### 🏆 5. Results
+    - Accuracy: **92.6%**  
+    - Precision: **92.3%**  
+    - Recall: **91.7%**  
+    - F1 Score: **92.0%**
+    """)
+
+    st.markdown("""
+    ### 🚀 6. Future Scope
+    - Real-time prediction  
+    - Banking integration  
+    - Deep learning upgrade  
+    """)
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # ================= LIVE DEMO =================
 elif selected == "Live Demo":
