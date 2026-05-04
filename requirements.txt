@@ -1,4 +1,5 @@
 streamlit
-scikit-learn
 plotly
-streamlit-option-menu-
+numpy
+scikit-learn
+streamlit-option-menu
