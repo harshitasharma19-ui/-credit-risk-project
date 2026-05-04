@@ -48,7 +48,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------------- LOAD MODEL ----------------
-model = pickle.load(open("model.pkl", "rb"))
+model = pickle.load(open("model_new.pkl", "rb"))
 
 # ---------------- NAVBAR ----------------
 selected = option_menu(
@@ -182,9 +182,19 @@ elif selected == "Live Demo":
                                 ["High School", "Bachelor's", "Master's"])
 
         if st.button("🚀 Run Prediction"):
-            # MODEL USES ONLY AGE + INCOME
-            input_data = [[age, income]]
-
+            # convert education to number
+            edu_map = {"High School": 0, "Bachelor's": 1, "Master's": 2}
+            input_data = [[
+            age,
+            income,
+            credit_score,
+            loan,
+            dti,
+            employment,
+            dependents,
+            edu_map[education]
+            ]]
+             
             pred = model.predict(input_data)
             prob = model.predict_proba(input_data)[0][1]
 
