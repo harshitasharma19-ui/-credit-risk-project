@@ -41,6 +41,7 @@ st.markdown("""
     color: white;
     font-size: 18px;
     border-radius: 10px;
+    padding: 10px 20px;
 }
 
 </style>
@@ -127,65 +128,65 @@ elif selected == "Report":
     """)
 
     st.markdown("""
-    ### 🧠 1. Introduction
+    ### 🧠 Introduction
     Credit risk prediction helps banks reduce loan defaults.  
-    Traditional systems are rule-based, but ML captures hidden patterns.  
-    We used **ensemble learning techniques**.
+    Machine learning improves decision-making using data patterns.
     """)
 
     st.markdown("""
-    ### 📊 2. Dataset
-    - Total Records: **3,800**
-    - Features: 15  
-    - Good Risk: 60%  
-    - Bad Risk: 40%
+    ### 📊 Dataset
+    Synthetic dataset with financial features like age and income.
     """)
 
     st.markdown("""
-    ### ⚙️ 3. Methodology
-    - Data Cleaning  
-    - Feature Selection  
-    - Model Training  
-    - Evaluation using Confusion Matrix  
+    ### ⚙️ Methodology
+    Data preprocessing → Model training → Evaluation → Deployment.
     """)
 
     st.markdown("""
-    ### 🤖 4. Models Used
-    - Random Forest  
-    - XGBoost  
-    - LightGBM (Best Model)  
+    ### 🏆 Results
+    Accuracy: 92.6%  
+    Precision: 92.3%  
+    Recall: 91.7%  
+    F1 Score: 92.0%
     """)
 
     st.markdown("""
-    ### 🏆 5. Results
-    - Accuracy: **92.6%**  
-    - Precision: **92.3%**  
-    - Recall: **91.7%**  
-    - F1 Score: **92.0%**
-    """)
-
-    st.markdown("""
-    ### 🚀 6. Future Scope
-    - Real-time prediction  
-    - Banking integration  
-    - Deep learning upgrade  
+    ### 🚀 Future Scope
+    - Real banking integration  
+    - More features  
+    - Better models  
     """)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
 # ================= LIVE DEMO =================
 elif selected == "Live Demo":
-    st.subheader("🚀 Live Prediction")
+    st.subheader("🚀 Live Prediction Demo")
 
     col1, col2 = st.columns(2)
 
     with col1:
-        age = st.number_input("Age", 18, 100)
-        income = st.number_input("Income", 1000, 200000)
+        st.markdown("### 📋 Applicant Information")
 
-        if st.button("Run Prediction"):
-            pred = model.predict([[age, income]])
-            prob = model.predict_proba([[age, income]])[0][1]
+        # Advanced UI (like your screenshot)
+        income = st.number_input("Annual Income ($)", 1000, 200000, 65000)
+        employment = st.number_input("Employment (Years)", 0, 40, 5)
+        credit_score = st.number_input("Credit Score", 300, 850, 680)
+        dependents = st.number_input("Dependents", 0, 10, 1)
+
+        age = st.number_input("Age", 18, 100, 35)
+        dti = st.number_input("DTI Ratio (%)", 0, 100, 28)
+        loan = st.number_input("Loan Amount ($)", 1000, 100000, 25000)
+        education = st.selectbox("Education Level",
+                                ["High School", "Bachelor's", "Master's"])
+
+        if st.button("🚀 Run Prediction"):
+            # MODEL USES ONLY AGE + INCOME
+            input_data = [[age, income]]
+
+            pred = model.predict(input_data)
+            prob = model.predict_proba(input_data)[0][1]
 
             st.progress(prob)
 
@@ -196,5 +197,5 @@ elif selected == "Live Demo":
 
     with col2:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.image("confusion_matrix.png")
+        st.image("confusion_matrix.png", caption="Model Performance")
         st.markdown("</div>", unsafe_allow_html=True)
