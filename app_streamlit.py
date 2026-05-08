@@ -287,6 +287,13 @@ elif selected == "Report":
 
     st.markdown("""
     ## 📄 Project Report
+                
+         ### 👨‍💻 Project Team
+
+
+            - Harshita Sharma
+            - Mehak
+            - Lakshya Vohra
 
     ### 📌 Introduction
     CreditGuard ML is a machine learning-based system
@@ -309,7 +316,18 @@ elif selected == "Report":
     - Logistic Regression
     - Decision Tree
     - Random Forest
+     
+     ### ✨ Key Features
 
+    - Credit Risk Prediction
+    - Multiple ML Model Comparison
+    - ROC Curve Visualization
+    - Feature Importance Analysis
+    - Confusion Matrix Evaluation
+    - Real-Time Prediction System
+    - Interactive Streamlit Dashboard
+    - Cloud Deployment Support 
+                           
     ### ⚙️ Technologies
     - Python
     - Streamlit
@@ -320,6 +338,14 @@ elif selected == "Report":
     ### 🏆 Final Result
     Random Forest achieved highest accuracy and
     delivered best classification performance.
+                
+     ### 🔮 Future Scope
+
+    - Integration with banking systems
+    - Real-world financial dataset support
+    - Deep learning-based prediction
+    - Real-time API deployment
+    - Advanced fraud detection system
 
     ### 🚀 Deployment
     Application deployed using Streamlit Cloud.
