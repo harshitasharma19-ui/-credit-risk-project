@@ -56,8 +56,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 # ---------------- MODELS ----------------
 models = {
     "Logistic Regression": LogisticRegression(max_iter=1000),
-    "Decision Tree": DecisionTreeClassifier(),
-    "Random Forest": RandomForestClassifier()
+    "Decision Tree": DecisionTreeClassifier(random_state=42),
+    "Random Forest": RandomForestClassifier(random_state=42)
 }
 
 best_model = None
@@ -69,10 +69,10 @@ print("\n================ MODEL ACCURACIES ================\n")
 # ---------------- TRAIN & TEST ----------------
 for name, model in models.items():
 
-    # TRAIN
+    # TRAIN MODEL
     model.fit(X_train, y_train)
 
-    # PREDICT
+    # PREDICTIONS
     y_pred = model.predict(X_test)
 
     # METRICS
@@ -93,7 +93,7 @@ for name, model in models.items():
         best_model = model
         best_model_name = name
 
-# ---------------- SAVE BEST MODEL ----------------
+# ---------------- SAVE MODEL ----------------
 pickle.dump(best_model, open("model_new.pkl", "wb"))
 
 print("\n==================================================")
@@ -103,24 +103,39 @@ print("Best Model Saved Successfully!")
 print("==================================================")
 
 # ---------------- CONFUSION MATRIX ----------------
+plt.figure(figsize=(6,5))
+
 y_pred = best_model.predict(X_test)
 
 cm = confusion_matrix(y_test, y_pred)
 
 disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+
 disp.plot()
 
 plt.title("Confusion Matrix")
+
 plt.savefig("confusion_matrix.png")
 
+plt.close()
+
 # ---------------- ROC CURVE ----------------
-RocCurveDisplay.from_estimator(best_model, X_test, y_test)
+plt.figure(figsize=(6,5))
+
+RocCurveDisplay.from_estimator(
+    best_model,
+    X_test,
+    y_test
+)
 
 plt.title("ROC Curve")
+
 plt.savefig("roc_curve.png")
 
+plt.close()
+
 # ---------------- FEATURE IMPORTANCE ----------------
-if best_model_name == "Random Forest":
+try:
 
     importances = best_model.feature_importances_
 
@@ -136,5 +151,14 @@ if best_model_name == "Random Forest":
     plt.title("Feature Importance")
 
     plt.savefig("feature_importance.png")
+
+    plt.close()
+
+    print("Feature Importance Saved Successfully!")
+
+except Exception as e:
+
+    print("Feature Importance Not Supported")
+    print(e)
 
 print("\nGraphs Saved Successfully!")
