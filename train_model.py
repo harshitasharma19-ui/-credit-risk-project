@@ -1,9 +1,14 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
 import pickle
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# MODELS
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 # ---------------- CREATE DATA ----------------
 np.random.seed(42)
@@ -30,13 +35,41 @@ data["risk"] = (
 X = data.drop("risk", axis=1)
 y = data["risk"]
 
-# ---------------- TRAIN ----------------
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+# ---------------- SPLIT ----------------
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
 
-model = RandomForestClassifier()
-model.fit(X_train, y_train)
+# ---------------- MODELS ----------------
+models = {
+    "Logistic Regression": LogisticRegression(max_iter=1000),
+    "Decision Tree": DecisionTreeClassifier(),
+    "Random Forest": RandomForestClassifier()
+}
 
-# ---------------- SAVE ----------------
-pickle.dump(model, open("model.pkl", "wb"))
+best_model = None
+best_accuracy = 0
 
-print("Accuracy:", accuracy_score(y_test, model.predict(X_test)))
+print("\nMODEL ACCURACIES:\n")
+
+# ---------------- TRAIN & TEST ----------------
+for name, model in models.items():
+
+    model.fit(X_train, y_train)
+
+    y_pred = model.predict(X_test)
+
+    acc = accuracy_score(y_test, y_pred)
+
+    print(f"{name}: {acc:.4f}")
+
+    # SAVE BEST MODEL
+    if acc > best_accuracy:
+        best_accuracy = acc
+        best_model = model
+
+# ---------------- SAVE BEST MODEL ----------------
+pickle.dump(best_model, open("model_new.pkl", "wb"))
+
+print("\nBest Model Saved Successfully!")
+print("Best Accuracy:", best_accuracy)

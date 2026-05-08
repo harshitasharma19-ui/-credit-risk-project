@@ -91,8 +91,17 @@ elif selected == "EDA":
 elif selected == "Models":
     st.subheader("🧠 Model Comparison")
 
-    models = ["RandomForest", "XGBoost", "LightGBM"]
-    acc = [85, 91, 92]
+    models = [
+    "Logistic Regression",
+    "Decision Tree",
+    "Random Forest"
+    ]
+
+    acc = [
+    84,
+    88,
+    92
+    ]
 
     fig = px.bar(x=models, y=acc, color=acc,
                  title="Model Accuracy")
