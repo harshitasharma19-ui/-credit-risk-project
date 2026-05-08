@@ -1,9 +1,19 @@
 import pandas as pd
 import numpy as np
 import pickle
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    ConfusionMatrixDisplay,
+    RocCurveDisplay,
+    precision_score,
+    recall_score,
+    f1_score
+)
 
 # MODELS
 from sklearn.linear_model import LogisticRegression
@@ -37,7 +47,10 @@ y = data["risk"]
 
 # ---------------- SPLIT ----------------
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+    X,
+    y,
+    test_size=0.2,
+    random_state=42
 )
 
 # ---------------- MODELS ----------------
@@ -49,27 +62,79 @@ models = {
 
 best_model = None
 best_accuracy = 0
+best_model_name = ""
 
-print("\nMODEL ACCURACIES:\n")
+print("\n================ MODEL ACCURACIES ================\n")
 
 # ---------------- TRAIN & TEST ----------------
 for name, model in models.items():
 
+    # TRAIN
     model.fit(X_train, y_train)
 
+    # PREDICT
     y_pred = model.predict(X_test)
 
+    # METRICS
     acc = accuracy_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
 
-    print(f"{name}: {acc:.4f}")
+    print(f"\n{name}")
+    print(f"Accuracy : {acc:.4f}")
+    print(f"Precision: {precision:.4f}")
+    print(f"Recall   : {recall:.4f}")
+    print(f"F1 Score : {f1:.4f}")
 
     # SAVE BEST MODEL
     if acc > best_accuracy:
         best_accuracy = acc
         best_model = model
+        best_model_name = name
 
 # ---------------- SAVE BEST MODEL ----------------
 pickle.dump(best_model, open("model_new.pkl", "wb"))
 
-print("\nBest Model Saved Successfully!")
-print("Best Accuracy:", best_accuracy)
+print("\n==================================================")
+print(f"Best Model: {best_model_name}")
+print(f"Best Accuracy: {best_accuracy:.4f}")
+print("Best Model Saved Successfully!")
+print("==================================================")
+
+# ---------------- CONFUSION MATRIX ----------------
+y_pred = best_model.predict(X_test)
+
+cm = confusion_matrix(y_test, y_pred)
+
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+
+plt.title("Confusion Matrix")
+plt.savefig("confusion_matrix.png")
+
+# ---------------- ROC CURVE ----------------
+RocCurveDisplay.from_estimator(best_model, X_test, y_test)
+
+plt.title("ROC Curve")
+plt.savefig("roc_curve.png")
+
+# ---------------- FEATURE IMPORTANCE ----------------
+if best_model_name == "Random Forest":
+
+    importances = best_model.feature_importances_
+
+    feature_names = X.columns
+
+    plt.figure(figsize=(10,5))
+
+    sns.barplot(
+        x=importances,
+        y=feature_names
+    )
+
+    plt.title("Feature Importance")
+
+    plt.savefig("feature_importance.png")
+
+print("\nGraphs Saved Successfully!")
